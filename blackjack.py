@@ -127,7 +127,6 @@ def showAll(player, dealer):
 # showCards(player1)
 # print('\n')
 
-
 def hit(deck, hand):
     card = deck.dealcard()
     hand.addToHand(card)
@@ -161,13 +160,39 @@ def hit_or_stand(deck, hand):
 def winScenarios(player, dealer):
     if player.points > dealer.points:
         print('\nPlayer wins!')
+        print('===============')
     elif player.points < dealer.points and dealer.points <= 21:
         print('\nDealer wins!')
+        print('===============')
     elif dealer.points > 21:
         print('\nDealer busts!')
+        print('===============')
         print('Player Wins')
+        print('===============')
     elif dealer.points == player.points:
         print('\nDealer Wins!')
+        print('===============')
+
+
+def replay():
+    global player_turn
+    while True:
+        ask = input('\nWould you like to play again? ').lower()
+
+        if ask[0] == 'y':
+            clear()
+            print('Good luck\n')
+            player_turn = True
+        elif ask == 'no':
+            clear()
+            print('Thank you for playing!')
+            game = False
+            break
+        else:
+            print('Sorry, I do not understand')
+            continue
+
+        return ask[0] == 'y'
 
 #####################################################################
 
@@ -193,18 +218,25 @@ while game:
 
     while player_turn:
 
-        hit_or_stand(deck, player,)
-        clear()
+        if player.points == 21:
+            clear()
+            print('BLACKJACK!!!!')
+            print('===============')
+            print('\nPlayer wins!')
+            print('===============')
+            player_turn = False
+        elif player.points < 21:
+            hit_or_stand(deck, player,)
+            clear()
 
-        showPartial(player, dealer)
-
-        # if over 21 bust
-        if player.points > 21:
+            showPartial(player, dealer)
+        elif player.points > 21:
             clear()
             print('\nPlayer Busts!')
+            print('===============')
             player_turn = False
 
-    if player.points <= 21:
+    if player.points < 21:
         clear()
 
         while dealer.points < 17:
@@ -215,16 +247,5 @@ while game:
         # win scenarios
         winScenarios(player, dealer)
 
-    ask = input('\nWould you like to play again? ').lower()
-
-    if ask[0] == 'y':
-        clear()
-        print('Good luck\n')
-        player_turn = True
-        continue
-    elif ask == 'no':
-        clear()
-        print('Thank you for playing!')
-        game = False
-    else:
-        print('Sorry, I do not understand')
+    if not replay():
+        break
